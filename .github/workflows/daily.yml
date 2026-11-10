@@ -1,0 +1,21 @@
+name: Daily brief
+
+on:
+  schedule:
+    - cron: "30 3 * * *"  # 09:00 IST (GitHub may start it 5-20 min late)
+  workflow_dispatch:  # "Run workflow" button for testing
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python test_bot.py && python bot.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
